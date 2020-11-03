@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="admin/_fragments :: head(~{::title})">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>博客管理登录</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="../../static/css/me.css">
+</head>
+<body >
+
+<br>
+<br>
+<br>
+<div class="m-container-small m-padded-tb-massive" style="max-width: 30em !important;">
+  <div class="ur container">
+    <div class="ui middle aligned center aligned grid">
+      <div class="column">
+        <h3 class="ui teal image header">
+          <div class="content">
+            MyBlog
+          </div>
+        </h3>
+        <div class="ur">
+          <h5 class="ui teal image header ">
+            <div class="content">
+              SpringBoot+semantic-ui博客管理系统
+            </div>
+          </h5>
+        </div>
+        <form class="ui large form" method="post" action="#" th:action="@{/admin/login}">
+          <div class="ui  segment">
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" name="username" placeholder="用户名">
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <input type="password" name="password" placeholder="密码">
+              </div>
+            </div>
+            <button class="ui fluid large teal submit button">登   录</button>
+          </div>
+
+          <div class="ui error mini message"></div>
+          <div class="ui mini negative message" th:unless="${#strings.isEmpty(message)}" th:text="${message}">用户名和密码错误</div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--/*/<th:block th:replace="_fragments :: script">/*/-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<!--/*/</th:block>/*/-->
+
+<script>
+
+  $('.ui.form').form({
+
+    fields : {
+      username : {
+        identifier: 'username',
+        rules: [{
+          type : 'empty',
+          prompt: '请输入用户名'
+        }]
+      },
+      password : {
+        identifier: 'password',
+        rules: [{
+          type : 'empty',
+          prompt: '请输入密码'
+        }]
+      }
+    }
+  });
+</script>
+<th:block th:fragment="script">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.js"></script>
+  <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+  <script src="../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
+  <script src="../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
+  <script src="../static/lib/qrcode/qrcode.min.js" th:src="@{/lib/qrcode/qrcode.min.js}"></script>
+  <script src="../static/lib/waypoints/jquery.waypoints.min.js" th:src="@{/lib/waypoints/jquery.waypoints.min.js}"></script>
+  <script>
+    $('#newblog-container').load(/*[[@{/footer/newblog}]]*/"/footer/newblog");
+
+    //设置电脑端显示网易云音乐插件
+    /* onload = function () {
+       var MusicDivShow = document.getElementById('netEasy-music');//获取指定div中的元素
+       MusicDivShow.style.display = 'block';//控制层显示
+     };*/
+    var script1 = document.createElement('script');
+    script1.type = 'text/javascript';
+    script1.src = '\\js\\snow.js';
+
+    <!-- 天气预报 -->
+    WIDGET = {FID: 'EtgqPWMbdv'}
+    var script4 = document.createElement('script');
+    script4.type = 'text/javascript';
+    script4.src = 'https://apip.weatherdt.com/float/static/js/r.js?v=1111';
+
+
+    <!-- 动态背景线条相关配置 -->
+    var script3 = document.createElement('script');
+    script3.type = 'text/javascript';
+    script3.color = '220,220,220';
+    script3.opacity = '0.7';//透明度
+    script3.zIndex = '-2';
+    script3.count = '1000';
+    script3.src = '//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js';
+
+    $('body').append(script1);
+    $('body').append(script3);
+    $('body').append(script4);
+  </script>
+  <!--单击显示文字-->
+  <script type="text/javascript" src="../static/js/click_show_text.js"></script>
+  <!--雪花效果-->
+  <script type="text/javascript" src="../js/snow.js"></script>
+</th:block>
+</body>
+</html>

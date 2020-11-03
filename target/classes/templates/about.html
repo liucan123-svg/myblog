@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head  th:replace="_fragments :: head(~{::title})">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于我</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="../static/css/me.css">
+</head>
+<body>
+
+  <!--导航-->
+  <nav th:replace="_fragments :: menu(6)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+    <div class="ui container">
+      <div class="ui inverted secondary stackable menu">
+        <h2 class="ui teal header item">LC_Blog</h2>
+        <a href="#" class=" m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+        <a href="#" class=" m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+        <a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+        <a href="#" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+        <a href="#" class="active m-item item m-mobile-hide"><i class="mini info icon"></i>关于我</a>
+        <div class="right m-item item m-mobile-hide">
+          <div class="ui icon inverted transparent input m-margin-tb-tiny">
+            <input type="text" placeholder="Search....">
+            <i class="search link icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+      <i class="sidebar icon"></i>
+    </a>
+  </nav>
+  <div id="pjax-container">
+    <!--中间内容-->
+    <!--<div  class="m-container m-padded-tb-big animated fadeIn">
+      <div class="ui container">
+
+        <div class="ui stackable grid">
+          <div class="eleven wide column">
+            <div class="ui segment">
+              <img style="margin: 0 auto;" src="https://lc6666.oss-cn-hangzhou.aliyuncs.com/beijin/tx.jpg" alt="" class="ui rounded image ">
+            </div>
+          </div>
+          <div class="five wide column">
+            <div class="ui top attached segment">
+              <div class="ui header">关于我</div>
+            </div>
+            <div class="ui attached segment">
+              <p class="m-text">一个软件工程专业的学生，知识就像浩瀚的海洋，我如海边捡贝壳的小男孩，生活未知的挑战正在等着我...</p>
+              <p class="m-text">热爱编程，热爱生活，励志成为一名合格的全栈开发工程师，喜欢各种球类运动，喜欢音乐，吃货，想去环游世界...</p>
+            </div>
+            <div class="ui attached segment">
+              <div class="ui orange basic left pointing label">编程</div>
+              <div class="ui orange basic left pointing label">思考</div>
+              <div class="ui orange basic left pointing label">运动</div>
+              <div class="ui orange basic left pointing label">旅游</div>
+            </div>
+            <div class="ui attached segment">
+              <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
+              <div class="ui teal basic left pointing label m-margin-tb-tiny">JavaScript</div>
+              <div class="ui teal basic left pointing label m-margin-tb-tiny">SSM</div>
+              <div class="ui teal basic left pointing label m-margin-tb-tiny">SpringBoot</div>
+              <div class="ui teal basic left pointing label m-margin-tb-tiny">Semantic UI</div>
+              <div class="ui teal basic left pointing label m-margin-tb-tiny">MYSQL</div>
+              <div class="ui teal basic left pointing label m-margin-tb-tiny">websocket</div>
+              <div class="ui teal basic left pointing label m-margin-tb-tiny">vue</div>
+              <div class="ui teal basic left pointing label m-margin-tb-tiny">...</div>
+            </div>
+            <div class="ui bottom attached segment">
+              <a href="https://blog.csdn.net/m0_44957155" class="ui circular icon button"><i class="google icon"></i></a>
+              <a href="#" class="ui wechat circular icon button" data-content="15575547865" data-position="bottom center"><i class="weixin icon"></i></a>
+              <a href="#" class="ui qq circular icon button" data-content="1435564677" data-position="bottom center"><i class="qq icon"></i></a>
+            </div>
+
+            <div class="ui wechat-qr flowing popup transition hidden">
+              <img src="../images/wechat.jpg" alt="" class="ui rounded image" style="width: 110px">
+            </div>
+            </div>
+        </div>
+
+      </div>
+    </div>
+    <br>
+    <br>-->
+    <div class="ui container m-opacity box-shadow-max">
+      <div class="ui segment m-margin-" align="center">
+        <div class="m-margin-top-large" align="center">
+          <img class="ui circular image" align="center" src="../static/images/gg.jpg" th:src="@{/images/gg.jpg}" style="width: 150px;height: 150px;">
+        </div>
+        <div class="m-margin-top-small" style="font-size: x-large;font-family: STSong" align="center">Tourist-Lc</div>
+
+        <!--<div class="m-margin-top" align="center">
+          <a href="#" class="ui tencent circular icon button"><i class="user icon"></i></a>
+          <a href="#" class="ui wechat circular icon button"><i class="weixin icon"></i></a>
+          <a href="#" class="ui qq circular icon button" data-content="316392836" data-position="bottom center"><i class="qq icon"></i></a>
+          <a href="https://github.com/oneStarLR/" target="_blank" class="ui github circular icon button" data-content="点击跳转GitHub" data-position="bottom center"><i class="github icon"></i></a>
+          <a href="https://blog.csdn.net/One_L_Star" target="_blank" class="ui csdn circular icon button" data-content="点击跳转CSDN" data-position="bottom center"><i class="copyright outline icon"></i></a>
+          <a href="#" class="ui email circular icon button" data-content="onestarlr@hotmail.com" data-position="bottom center"><i class="envelope  icon"></i></a>
+        </div>
+
+        <div class="ui tencent-qr flowing popup transition hidden">
+          <img src="../static/images/oneStar.jpg" th:src="@{/images/oneStar.jpg}" alt="" class="ui rounded image" style="width: 110px">
+          <div align="center">公众号</div>
+        </div>
+        <div class="ui wechat-qr flowing popup transition hidden">
+          <img src="../static/images/oneStarWechat.jpg" th:src="@{/images/oneStarWechat.jpg}" alt="" class="ui rounded image" style="width: 110px">
+          <div align="center">微信</div>
+        </div>
+        <div class="ui qq-qr flowing popup transition hidden">
+          <img src="../static/images/qq.jpg" th:src="@{/images/qq.jpg}" alt="" class="ui rounded image" style="width: 110px">
+          <div align="center">QQ</div>
+        </div>
+        <hr class="m-margin-top-small" style="width: 30%">-->
+        <div class="" align="center">
+          <a href="#" class="ui wechat circular icon button"><i class="weixin icon"></i></a>
+          <a href="#" class="ui qq circular icon button" data-content="1435564677" data-position="bottom center"><i
+                  class="qq icon"></i></a>
+          <a href="https://github.com/" target="_blank" class="ui github circular icon button"
+             data-content="点击跳转GitHub" data-position="bottom center"><i class="github icon"></i></a>
+          <a href="https://blog.csdn.net/m0_44957155" target="_blank" class="ui csdn circular icon button"
+             data-content="点击跳转CSDN" data-position="bottom center"><i class="copyright outline icon"></i></a>
+          <a href="#" class="ui email circular icon button" data-content="lc2333vlp@163.com"
+             data-position="bottom center"><i class="envelope  icon"></i></a>
+        </div>
+
+        <div class="ui wechat-qr flowing popup transition hidden">
+
+          <div align="center">Wechat:CanC_0324</div>
+        </div>
+        <div class="ui qq-qr flowing popup transition hidden">
+
+          <div align="center">QQ:1435564677</div>
+        </div>
+        <br>
+        <div>
+          <p>他问，“如果用5年，10年的时间来学习编程，</p>
+          <p>你能不能成为这个领域的专家?”</p>
+          <p>我说，“应该可以。”</p>
+          <p>他说，“你现在21岁，九年后也才30岁，30岁就能成为某个领域的专家，为什么不去做呢?</p>
+          <p>你抬头看看周围有多少30岁的人还一事无成，</p>
+          <p>而那个时候你已经是编程专家。”</p>
+          <br>
+          <p>在我二十多岁的年纪</p>
+          <p>岁月悠悠</p>
+          <p>努力才会有出路</p>
+          <p>因为自惭形秽</p>
+          <p>所以更想力争上游</p>
+          <p>因为自命不凡</p>
+          <p>所以想要出人头地</p>
+          <p>因为天生傲骨</p>
+          <p>所以不愿甘拜下风</p>
+        </div>
+        <hr class="m-margin-top-large">
+        <br>
+        <h2 class="m-margin-tb-tiny" style="font-size: xx-large;font-weight: bold;color: #F08047;font-family: STSong">打赏本站</h2>
+        <div class="ui orange basic label m-margin-tb-tiny">
+          <p style="font-size: medium">每一次提笔的我们，就像街边的街头艺人，用笔唱着自己的歌谣。如果有一天你感动了，那么期待您请我们来一杯咖啡</p>
+        </div>
+        <div class="ui orange basic label">
+          <div class="ui images" style="font-size: inherit !important;">
+            <div class="image">
+              <img src="../static/images/zhifupay.jpg" th:src="@{/images/zhifupay.jpg}" alt="" class="ui rounded bordered image" style="width: 180px">
+              <div>支付宝</div>
+            </div>
+            <div class="image">
+              <img src="../static/images/wechatpay.jpg" th:src="@{/images/wechatpay.jpg}" alt="" class="ui rounded bordered image" style="width: 180px">
+              <div>微信</div>
+            </div>
+          </div>
+        </div>
+        <!--<div class="hiddenDiv"></div>-->
+      </div>
+    </div>
+
+    <br>
+    <br>
+
+
+    <!--关于页面-->
+    <script type="text/javascript">
+      $('.wechat').popup({
+        popup : $('.wechat-qr'),
+        position: 'bottom center'
+      });
+      $('.qq').popup();
+    </script>
+  </div>
+  <!--底部footer-->
+  <footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+    <div class="ui center aligned container">
+      <div class="ui inverted divided stackable grid">
+        <div class="three wide column">
+          <div class="ui inverted link list">
+            <div class="item">
+              <img src="../static/images/wechat.jpg" class="ui rounded image" alt="" style="width: 110px">
+            </div>
+          </div>
+        </div>
+        <div class="three wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          </div>
+        </div>
+        <div class="three wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item m-text-thin">Email：lc2333vlp@163.com</a>
+            <a href="#" class="item m-text-thin">QQ：1435564677</a>
+          </div>
+        </div>
+        <div class="seven wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
+          <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、记录学习进度和关于编程、写作、思考相关的任何内容...</p>
+        </div>
+      </div>
+      <div class="ui inverted section divider"></div>
+      <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2020 - 2020 LC Designed by LiuCan</p>
+    </div>
+
+  </footer>
+  <!--/*/<th:block th:replace="_fragments :: script">/*/-->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+  <!--/*/</th:block>/*/-->
+
+  <script>
+    $('.menu.toggle').click(function () {
+      $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.wechat').popup({
+      popup : $('.wechat-qr'),
+      position: 'bottom center'
+    });
+    $('.qq').popup();
+    $('.github').popup();
+
+  </script>
+
+
+</body>
+</html>

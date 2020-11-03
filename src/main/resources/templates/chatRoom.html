@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天室</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css">
+</head>
+<link rel="stylesheet" href="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css">
+<body>
+
+<!--导航-->
+<nav th:replace="_fragments :: menu(6)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+    <div class="ui container">
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui teal header item">LC_Blog</h2>
+            <a href="#" class=" m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+            <a href="#" class=" m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+            <a href="#" class="active m-item item m-mobile-hide"><i class="mini info icon"></i>关于我</a>
+            <div class="right m-item item m-mobile-hide">
+                <div class="ui icon inverted transparent input m-margin-tb-tiny">
+                    <input type="text" placeholder="Search....">
+                    <i class="search link icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
+<div id="pjax-container">
+    <!--中间内容-->
+    <div class="m-container m-padded-tb-big animated fadeIn">
+        <div class="ui container">
+
+            <div class="ui stackable grid">
+                <div class="five wide column">
+                    <div class="ui top attached segment">
+                        <div class="ui header">webSocket聊天室</div>
+                    </div>
+                    <div class="ui attached segment">
+                        <p class="m-text">当前在线人数：
+                            <span class="chat-num">0</span>
+                        </p>
+
+                        <p class="m-text">欢迎：
+                            <i id="username" th:text="${username}"></i>
+                        </p>
+                        <p>一个昼夜，也过了一个季度。</p>
+                    </div>
+                </div>
+
+                <div class="eleven wide column">
+                    <div class="ui segment">
+                        <div class="chatMessage-box-title" id="message-box-title-inline">聊天室(0)</div>
+                        <div class="chatMessage-container chat-box-content">
+                            <div class="load-message" onclick="loadMessage(this)"><span class="iconfont icon-time"></span>加载更多</div>
+                            <p class="chatMessage-system">2020-06-18 20:34</p>
+                        </div>
+
+                        <div id="commentEditor" class="fields error" contenteditable="true"
+                             data-placeholder="请输入....."></div>
+
+                        <div class="field  m-margin-bottom-small m-mobile-wide">
+                            <button id="sendChat-btn" type="button" class="positive ui button m-mobile-wide"><i
+                                    class="large edit icon"></i>发送
+                            </button>
+                            <button id="clearChat-btn" type="button" class="negative ui button m-mobile-wide"><i
+                                    class="large edit icon"></i>清空
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+</div>
+
+<!--底部footer-->
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+    <div class="ui center aligned container">
+        <div class="ui inverted divided stackable grid">
+            <div class="three wide column">
+                <div class="ui inverted link list">
+                    <div class="item">
+                        <img src="../static/images/wechat.jpg" class="ui rounded image" alt="" style="width: 110px">
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header m-text-thin m-text-spaced ">最新博客</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item m-text-thin">Email：lc2333vlp@163.com</a>
+                    <a href="#" class="item m-text-thin">QQ：1435564677</a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
+                <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、记录学习进度和关于编程、写作、思考相关的任何内容...</p>
+            </div>
+        </div>
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2020 - 2020 LC Designed by LiuCan</p>
+    </div>
+
+</footer>
+
+<!--/*/<th:block th:replace="_fragments :: script">/*/-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<!--/*/</th:block>/*/-->
+
+<script src="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
+<script th:inline="javascript">
+
+    /**
+     * WebSocket客户端
+     *
+     * 使用说明：
+     * 1、WebSocket客户端通过回调函数来接收服务端消息。例如：webSocket.onmessage
+     * 2、WebSocket客户端通过send方法来发送消息给服务端。例如：webSocket.send();
+     */
+    function getWebSocket() {
+        /**
+         * WebSocket客户端 PS：URL开头表示WebSocket协议 中间是域名端口 结尾是服务端映射地址
+         */
+            // var webSocket = new WebSocket(/*[[${webSocketUrl}]]*/ 'ws://localhost:82/chat');
+            //var webSocket = new WebSocket('ws://101.200.47.36:82/chat');
+        var webSocket = new WebSocket('ws://39.97.186.21:80/chat');
+        /**
+         * 当服务端打开连接
+         */
+        webSocket.onopen = function (event) {
+            console.log('WebSocket打开连接');
+        };
+
+        /**
+         * 当服务端发来消息：1.广播消息 2.更新在线人数
+         */
+        webSocket.onmessage = function (event) {
+            console.log('WebSocket收到消息：%c' + event.data, 'color:green');
+            //获取服务端消息
+            var message = JSON.parse(event.data) || {};
+            var $messageContainer = $('.chatMessage-container');
+
+            if (message.type === 'SPEAK') {
+                let nowTime = getNowTime();
+                $messageContainer.append(
+                    '<div class="ui comments">' +
+                    '<div class="comment">' +
+                    '<a class="avatar">' +
+                    '<img src="/images/charAvatar.png">' +
+                    '</a>' +
+                    '<div class="content">' + message.username +
+                    '<div class="metadata">' +
+                    '<div class="date">' + nowTime + '</div>' +
+                    '</div>' +
+                    '<div class="text">' +
+                    message.msg +
+                    '</div></div></div></div>'
+                );
+            }
+            $('.chat-num').text(message.onlineCount);
+
+            //防止刷屏
+            var $cards = $messageContainer.children('.mdui-card:visible').toArray();
+            if ($cards.length > 5) {
+                $cards.forEach(function (item, index) {
+                    index < $cards.length - 5 && $(item).slideUp('fast');
+                });
+            }
+        };
+
+        /**
+         * 关闭连接
+         */
+        webSocket.onclose = function (event) {
+            console.log('WebSocket关闭连接');
+        };
+
+        /**
+         * 通信失败
+         */
+        webSocket.onerror = function (event) {
+            console.log('WebSocket发生异常');
+
+        };
+        return webSocket;
+    }
+
+    var webSocket = getWebSocket();
+
+
+    /**
+     * 通过WebSocket对象发送消息给服务端
+     */
+
+    $('#sendChat-btn').click(function () {
+        let value = document.getElementById("commentEditor").innerHTML;
+        //添加状态判断，当为OPEN时，发送消息
+        if (webSocket.readyState === 1) {
+            if (value) {
+                webSocket.send(JSON.stringify({username: $('#username').text(), msg: value}));
+                clearContent();
+            } else {
+                alert("输入内容不能为空");
+            }
+        } else {
+            console.log("连接中。。。")
+        }
+
+    });
+
+    /**
+     * 清屏
+     */
+    $('#clearChat-btn').click(function () {
+        $(".chatMessage-container").empty();
+    });
+
+    function clearContent() {
+        document.getElementById("commentEditor").innerText = '';
+        $("[id='commentEditor']").attr("data-placeholder", "请输入.....");
+    }
+
+    function sendMsgToServer() {
+        let value = document.getElementById("commentEditor").innerHTML;
+        if (value) {
+            webSocket.send(JSON.stringify({username: $('#username').text(), msg: value}));
+            clearContent();
+        } else {
+            alert("输入内容不能为空");
+        }
+    }
+
+    /**
+     * 使用ENTER发送消息
+     */
+    document.onkeydown = function (event) {
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        e.keyCode === 13 && sendMsgToServer();
+    };
+
+    function getNowTime() {
+        var myDate = new Date();
+        myDate.getYear();        //获取当前年份(2位)
+        myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+        myDate.getMonth();       //获取当前月份(0-11,0代表1月)
+        myDate.getDate();        //获取当前日(1-31)
+        myDate.getDay();         //获取当前星期X(0-6,0代表星期天)
+        myDate.getTime();        //获取当前时间(从1970.1.1开始的毫秒数)
+        myDate.getHours();       //获取当前小时数(0-23)
+        myDate.getMinutes();     //获取当前分钟数(0-59)
+        myDate.getSeconds();     //获取当前秒数(0-59)
+        myDate.getMilliseconds();    //获取当前毫秒数(0-999)
+        myDate.toLocaleDateString();     //获取当前日期
+        var mytime = myDate.toLocaleTimeString();     //获取当前时间
+        return myDate.toLocaleString();        //获取日期与时间
+    }
+</script>
+</body>
+</html>

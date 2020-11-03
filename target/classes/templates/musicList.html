@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head  th:replace="_fragments :: head(~{::title})">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歌曲</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css">
+    <style>
+        .myHideStyle{
+            display: none !important;
+        }
+        .myShowStyle{
+            display: inline-block !important;
+        }
+    </style>
+</head>
+<link rel="stylesheet" href="../static/css/dropzone.min.css" th:href="@{/css/dropzone.min.css}"/>
+<link rel="stylesheet" href="../static/css/basic.min.css" th:href="@{/css/basic.min.css}"/>
+<link rel="stylesheet" href="../static/css/file_window.css" th:href="@{/css/file_window.css}"/>
+<script src="/js/dropzone.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<body>
+<!--导航-->
+<div class="ui inverted attached segment m-padded-tb-mini m-shadow-small" style="z-index: 999 !important;">
+    <div class="ui container">
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui teal header item" title="个人博客">LC_Blog</h2>
+            <a href="#" target="_blank" th:href="@{/}" class="m-item item m-mobile-hide " th:classappend="${n==1} ? 'active'"><i class="mini home icon"></i>&nbsp;首页</a>
+            <a href="#" target="_blank" th:href="@{/types/-1}" class="m-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="mini idea icon"></i>分类</a>
+            <a href="#" target="_blank" th:href="@{/tags/-1}" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="mini tags icon"></i>&nbsp;标签</a>
+            <a href="#" target="_blank" th:href="@{/archives}" class="m-item item m-mobile-hide" th:classappend="${n==4} ? 'active'"><i class="mini clone icon"></i>&nbsp;归档</a>
+            <a href="#" target="_blank" th:href="@{/Messages}" class="m-item item m-mobile-hide" th:classappend="${n==5} ? 'active'"><i class="mini envelope outline icon"></i>&nbsp;留言</a>
+            <a href="#" target="_blank" th:href="@{/about}" class="m-item item m-mobile-hide" th:classappend="${n==6} ? 'active'"><i class="mini info icon"></i>关于我</a>
+            <a href="http://music.xiongsihao.com" class="m-item item m-mobile-hide" th:classappend="${n==7} ? 'active'"><i class="mini music icon"></i>&nbsp;在线音乐</a>
+            <a href="http://netdisk.xiongsihao.com" class="m-item item m-mobile-hide" th:classappend="${n==8} ? 'active'"><i class="mini save icon"></i>&nbsp;云盘</a>
+            <!--            <a href="#" target="_blank" th:href="@{/admin}" class="m-item item m-mobile-hide" th:classappend="${n==7} ? 'active'"><i class="mini user secret icon"></i>后台管理</a>-->
+            <div class="right m-item item m-mobile-hide">
+                <form name="search" action="#" th:action="@{/search}" method="post" target="_blank">
+                    <div class="ui icon inverted  input m-margin-tb-tiny">
+                        <input type="text" name="query" placeholder="Search...." th:value="${query}">
+                        <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                    </div>
+                </form>
+            </div>
+
+            <div class="right m-item m-mobile-hide item" >
+                <div th:classappend="${session.loginStatus}?'myHideStyle':'myShowStyle'">
+                    <a href="#"  th:href="@{/qq/oauth}" style="width:80px; text-align:center"><i class="mini qq icon"></i>QQ登录&nbsp;|</a>
+                    <a href="#"  th:href="@{/github/oauth}" style="width:80px; text-align:center"><i class="github icon"></i>github登录&nbsp;|</a>
+                    <a href="#" target="_blank" th:href="@{/admin}" style="width:80px; text-align:center"><i class="mini user secret icon"></i>&nbsp;后台管理</a>
+                </div>
+
+                <div class="ui dropdown item" th:classappend="${session.loginStatus}?'myShowStyle':'myHideStyle'">
+                    <div class="text">
+                        <img class="ui avatar image" th:src="${session.avatar}">
+                        <span th:text="${session.nickname}">LC</span>
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu" th:if="${session.loginType == 1}">
+                        <a href="#" th:href="@{/qqinfo}" class="item">QQ资料</a>
+                        <a href="#" th:href="@{/qqlogout}" class="item">退出登录</a>
+                    </div>
+                    <div class="menu" th:if="${session.loginType == 2}">
+                        <a href="#" th:href="@{/githubInfo}" class="item">Github资料</a>
+                        <a href="#" th:href="@{/githublogout}" class="item">退出登录</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+</div>
+        <table class="ui celled padded table">
+            <thead>
+                <tr>
+                    <th class="single line">歌曲图片</th>
+                    <th>歌手名</th>
+                    <th>歌名</th>
+                    <th>歌曲播放</th>
+                    <th>歌词</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="song : ${result}">
+                    <td width="10%">
+                        <img width="100" height="100" th:src="@{${song.pic}}">
+                    </td>
+                    <td width="5%">
+                        <h2 th:text="${song.author}" class="center">A</h2>
+                    </td>
+                    <td width="5%" th:text="${song.title}" class="single center line">
+                        Power Output
+                    </td>
+
+                    <td width="5%" class="right aligned">
+                        <audio controls th:src="@{${song.url}}" src="https://m9.music.126.net/20200418201512/537652e401beee1a05a38207ef6aab22/ymusic/a99e/6a3d/6cdc/821ef9bd7350aba092699b6af77049dc.mp3#320"></audio>
+                    </td>
+                    <td width="75%" th:text="${song.lrc}">Creatine supplementation is the reference compound for increasing muscular creatine levels; there is variability in this increase, however, with some nonresponders.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+<br>
+<br>
+<!--底部footer-->
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+    <div class="ui center aligned container">
+        <div class="ui inverted divided stackable grid">
+            <div class="three wide column">
+                <div class="ui inverted link list">
+                    <div class="item">
+                        <img src="../static/images/wechat.jpg" class="ui rounded image" alt="" style="width: 110px">
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                    <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item m-text-thin">Email：lc2333vlp@163.com</a>
+                    <a href="#" class="item m-text-thin">QQ：1435564677</a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
+                <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、记录学习进度和关于编程、写作、思考相关的任何内容...</p>
+            </div>
+        </div>
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2020 - 2020 LC Designed by LiuCan</p>
+    </div>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+</body>
+</html>

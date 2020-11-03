@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>博客</title>
+  <!--    <script src="../static/js/vendor/modernizr-2.6.2.min.js" th:src="@{/js/vendor/modernizr-2.6.2.min.js}"></script>-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="/lib/editormd/css/editormd.min.css">
+  <link rel="stylesheet" href="/css/me1.css">
+  <link href="https://lc6666.oss-cn-hangzhou.aliyuncs.com/beijin/gg.jpg"
+        rel="icon" type="image/x-ico">
+  <link rel="stylesheet" href="../static/css/pjaxLoad.css" th:href="@{/css/pjaxLoad.css}">
+  <link rel="stylesheet" href="../static/css/alert_window.css" th:href="@{/css/alert_window.css}"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css">
+</head>
+<body>
+<!--导航-->
+
+<nav  id="nav"  class="gird-header" style="display: none" > <!--th:replace="_fragments :: menu(1) "-->
+  <!--<div class="ui container">
+    <div class="ui inverted secondary stackable menu">
+      <h2 class="ui teal header item">LC_Blog</h2>
+      <a href="#" class=" m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+      <a href="#" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+      <a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+      <a href="#" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+      <a href="#" class="m-item item m-mobile-hide"><i class="mini info icon"></i>关于我</a>
+      <div class="right m-item item m-mobile-hide">
+        <div class="ui icon inverted transparent input m-margin-tb-tiny">
+          <input type="text" placeholder="Search....">
+          <i class="search link icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+    <i class="sidebar icon"></i>
+  </a>-->
+  <div id="aplayer" style="position: fixed;right: 0;top:10%;z-index:9;width:280px;" ></div>
+  <div class="ui container ngvigation">
+    <div class="ui inverted secondary stackable menu">
+      <!--<h2 class="ui teal header item &lt;!&ndash;brand&ndash;&gt;" title="个人博客">LC_Blog</h2>-->
+      <!--<img src="  https://lc6666.oss-cn-hangzhou.aliyuncs.com/beijin/%E5%BF%83-%E7%BF%85%E8%86%80.png"height="50" width="50">-->
+      <h2 class="ui olive header item" style="font-family: STSong" >LC_Blog</h2>
+      <a href="#" data-pjax th:href="@{/}" class="m-item item m-mobile-hide " ><i class="mini home icon"></i>&nbsp;首页</a>
+      <a href="#" data-pjax th:href="@{/types/-1}" class="m-item item m-mobile-hide" ><i class="mini idea icon"></i>分类</a>
+      <a href="#" data-pjax th:href="@{/tags/-1}" class="m-item item m-mobile-hide" ><i class="mini tags icon"></i>&nbsp;标签</a>
+      <a href="#" data-pjax th:href="@{/archives}" class="m-item item m-mobile-hide" ><i class="mini clone icon"></i>&nbsp;归档</a>
+      <a href="#" target="_blank" th:href="@{/Messages}" class="m-item item m-mobile-hide" ><i class="mini envelope outline icon"></i>&nbsp;留言</a>
+      <a href="#" data-pjax th:href="@{/friends}" class="m-item item m-mobile-hide" ><i class="mini pencil alternate icon"></i>&nbsp;友人帐</a>
+      <a href="http://netdisk.xiongsihao.com" class="m-item item m-mobile-hide" ><i class="mini save icon"></i>&nbsp;云盘</a>
+      <a href="#" data-pjax th:href="@{/about}" class="m-item item m-mobile-hide" ><i class="mini info icon"></i>关于我</a>
+      <!--      <a href="#" target="_blank" th:href="@{/admin}" class="m-item item m-mobile-hide" th:classappend="${n==7} ? 'active'"><i class="mini user secret icon"></i>后台管理</a>
+            <a href="#" target="_blank" th:href="@{/qq/oauth}" class="m-item item m-mobile-hide"><i class="mini qq icon"></i>QQ登录</a>-->
+
+      <div class="right m-item item m-mobile-hide ">
+        <form name="search" action="#" th:action="@{/search}" method="post" data-pjax>
+          <div class="ui icon inverted  input m-margin-tb-tiny">
+            <input type="text" name="query" placeholder="Search...." th:value="${query}">
+            <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+          </div>
+        </form>
+      </div>
+
+      <div class="right m-item m-mobile-hide item" >
+        <div th:classappend="${session.loginStatus}?'myHideStyle':'myShowStyle'">
+          <a href="#"  target="_blank" th:href="@{/qq/oauth}" style="width:80px; text-align:center"><i class="mini qq icon"></i>QQ登录&nbsp;|</a>
+          <a href="#"  target="_blank" th:href="@{/github/oauth}" style="width:80px; text-align:center"><i class="github icon"></i>github登录&nbsp;|</a>
+          <a href="#" target="_blank" th:href="@{/admin}" style="width:80px; text-align:center"><i class="mini user secret icon"></i>&nbsp;后台管理</a>
+        </div>
+
+        <div class="ui dropdown item" th:classappend="${session.loginStatus}?'myShowStyle':'myHideStyle'">
+          <div class="text">
+            <img class="ui avatar image" th:src="${session.avatar}">
+            <span th:text="${session.nickname}">LC</span>
+          </div>
+          <i class="dropdown icon"></i>
+          <div class="menu" th:if="${session.loginType == 1}">
+            <a href="#"  th:href="@{/qqinfo}" class="item">QQ资料</a>
+            <a href="#"  th:href="@{/qqlogout}" class="item">退出登录</a>
+          </div>
+          <div class="menu" th:if="${session.loginType == 2}">
+            <a href="#" th:href="@{/githubInfo}" class="item">Github资料</a>
+            <a href="#" th:href="@{/githublogout}" class="item">退出登录</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!--顶部图片-->
+<div class="m-bg-class_outer" style="width: 100%;height: 750px">
+  <img src="../static/images/2002096.jpg" th:src="@{/images/2002096.jpg}" alt="" class="ui m-bg image" style="width: 100%;height: 100%; opacity: 1 !important;">
+  <div class="m-bg-class_cover" align="center">
+    <div class="m-margin-top-maxx" align="center">
+      <img class="ui circular image" align="center"
+           src="https://lc6666.oss-cn-hangzhou.aliyuncs.com/beijin/gg.jpg"
+           style="width: 150px;height: 150px;">
+    </div>
+    <div class="m-font-size-title-large" align="center">LC</div>
+    <h3 id="text" class="m-font-size-text" align="center"></h3>
+    <hr style="width: 20%">
+    <div class="" align="center">
+      <a href="#" class="ui wechat circular icon button"><i class="weixin icon"></i></a>
+      <a href="#" class="ui qq circular icon button" data-content="1435564677" data-position="bottom center"><i
+              class="qq icon"></i></a>
+      <!--<a href="https://github.com/gavy26/" target="_blank" class="ui github circular icon button"
+         data-content="点击跳转GitHub" data-position="bottom center"><i class="github icon"></i></a>-->
+      <a href="https://blog.csdn.net/m0_44957155" target="_blank" class="ui csdn circular icon button"
+         data-content="点击跳转CSDN" data-position="bottom center"><i class="copyright outline icon"></i></a>
+      <a href="#" class="ui email circular icon button" data-content="lc23333vlp@163.com"
+         data-position="bottom center"><i class="envelope  icon"></i></a>
+    </div>
+
+    <div class="ui wechat-qr flowing popup transition hidden">
+
+      <div align="center">Wechat:CanC_0324</div>
+    </div>
+    <div class="ui qq-qr flowing popup transition hidden">
+
+      <div align="center">QQ:1435564677</div>
+    </div>
+    <div class="m-font-size-text" align="center">欢迎来到我的网站，希望与你一起学习，一起以梦为马。</div>
+    <div id="waypoint" class="ui m-margin-top-large" align="center">
+    </div>
+    <div class="hiddenDiv"></div>
+  </div>
+</div>
+
+</div>
+
+
+<div id="pjax-container">
+  <!--中间内容-->
+  <div id="middleValue" class="m-container m-padded-tb-big animated fadeIn ">
+    <div class="ui container">
+      <div class="ui stackable grid">
+        <!--左边博客列表-->
+        <div id="blogDiv" class="eleven wide column blogDiv animated fadeInLeftBig">
+          <!--header-->
+          <div class="ui top attached segment">
+            <div class="ui middle aligned two column grid">
+              <div class="column">
+                <h3 class="ui teal header">博客</h3>
+              </div>
+              <div class="right aligned column">
+                共 <h2 class="ui orange header m-inline-block m-text-thin" th:text="${page.totalElements}"> 14 </h2> 篇
+              </div>
+            </div>
+          </div>
+          <!--content-->
+          <div class="ui attached  segment">
+
+            <div class="ui padded vertical segment m-padded-tb-large" th:each="blog : ${page.content}">
+              <div class="ui middle aligned mobile reversed stackable grid" >
+                <div class="eleven wide column">
+                  <h3 class="ui header" ><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black" th:text="${blog.title}">你真的理解什么是财富自由吗?</a></h3>
+                  <!--<p class="m-text" th:text="|${blog.description}......|">1正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>-->
+                  <p class="m-text"><a href="#" th:href="@{/blog/{id}(id=${blog.id})}"  data-pjax th:text="|${blog.description}......|" class="m-black">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</a></p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="http://cdn.xiongsihao.com/avatar.png" th:src="@{${blog.user.avatar}}"  alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header" th:text="${blog.user.nickname}" >LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i><span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">2020-6-25</span>
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> <span th:text="${blog.views}">2342</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.type.name}">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" th:src="@{${blog.firstPicture}}"  alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <!--/*-->
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">你真的理解什么是财富自由吗？</h3>
+                  <p class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="http://cdn.xiongsihao.com/avatar.png" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2020-6-25
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">你真的理解什么是财富自由吗？</h3>
+                  <p class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2020-6-25
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">你真的理解什么是财富自由吗？</h3>
+                  <p class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2020-6-25
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">你真的理解什么是财富自由吗？</h3>
+                  <p class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2020-6-25
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">你真的理解什么是财富自由吗？</h3>
+                  <p class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2017-10-01
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">你真的理解什么是财富自由吗？</h3>
+                  <p class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2020-6-25
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">你真的理解什么是财富自由吗？</h3>
+                  <p class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2020-6-25
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">你真的理解什么是财富自由吗？</h3>
+                  <p class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2020-6-25
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">你真的理解什么是财富自由吗？</h3>
+                  <p class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">LC</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2020-6-25
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005"  alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            <!--*/-->
+          </div>
+
+          <!--footer-->
+          <div class="ui bottom attached segment" th:if="${page.totalPages}>1">
+            <!--pjax加载动画-->
+            <div class="loading" style="display: none;"> <div id="loader"></div></div>
+            <div class="ui middle aligned two column grid">
+              <div class="column">
+                <a href="#" data-pjax th:href="@{/(page=${page.number}-1)}"  th:unless="${page.first}" class="ui mini teal basic button">上一页</a>
+              </div>
+              <div class="right aligned column">
+                <a href="#" data-pjax th:href="@{/(page=${page.number}+1)}"  th:unless="${page.last}" class="ui mini teal basic button">下一页</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!--右边的top-->
+        <div class="five wide column ">
+          <!--分类-->
+          <div id="typeDiv" class="ui segments classify animated fadeInRightBig ">
+            <div class="ui secondary segment">
+              <div class="ui two column grid">
+                <div class="column">
+                  <i class="idea icon"></i>分类
+                </div>
+                <div class="right aligned column">
+                  <a href="#" th:href="@{types/-1}" data-pjax >more <i class="angle double right icon"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="ui teal segment">
+              <div class="ui fluid vertical menu" >
+                <a href="#" th:href="@{/types/{id}(id=${type.id})}" data-pjax class="item"  th:each="type : ${types}">
+                  <span th:text="${type.name}">学习日志</span>
+                  <div class="ui teal basic left pointing label" th:text="${#arrays.length(type.blogs)}">13</div>
+                </a>
+                <!--/*-->
+                <a href="#" class="item">
+                  思考与感悟
+                  <div class="ui teal basic left pointing label">13</div>
+                </a>
+                <a href="#" class="item">
+                  学习日志
+                  <div class="ui teal basic left pointing label">13</div>
+                </a>
+                <a href="#" class="item">
+                  学习日志
+                  <div class="ui teal basic left pointing label">13</div>
+                </a>
+                <a href="#" class="item">
+                  学习日志
+                  <div class="ui teal basic left pointing label">13</div>
+                </a>
+                <a href="#" class="item">
+                  学习日志
+                  <div class="ui teal basic left pointing label">13</div>
+                </a>
+                <!--*/-->
+              </div>
+            </div>
+          </div>
+
+          <!--标签-->
+          <div id="tagDiv" class="ui segments m-margin-top-large tagDiv animated fadeInRightBig">
+            <div class="ui secondary segment">
+              <div class="ui two column grid">
+                <div class="column">
+                  <i class="tags icon"></i>标签
+                </div>
+                <div class="right aligned column">
+                  <a href="#" th:href="@{tags/-1}" data-pjax>more <i class="angle double right icon"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="ui teal segment">
+              <a href="#" th:href="@{/tags/{id}(id=${tag.id})}" data-pjax class="ui teal basic left pointing label m-margin-tb-tiny" th:each="tag : ${tags}">
+                <span th:text="${tag.name}">方法论</span> <div class="detail" th:text="${#arrays.length(tag.blogs)}">23</div>
+              </a>
+              <!--/*-->
+              <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                论 <div class="detail">23</div>
+              </a>
+              <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                论 <div class="detail">23</div>
+              </a>
+              <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                方法论 <div class="detail">23</div>
+              </a>
+              <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                方法论 <div class="detail">23</div>
+              </a>
+              <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                方法论 <div class="detail">23</div>
+              </a>
+              <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                方法论 <div class="detail">23</div>
+              </a>
+              <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                方法论 <div class="detail">23</div>
+              </a>
+              <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                方法论 <div class="detail">23</div>
+              </a>
+              <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                方法论 <div class="detail">23</div>
+              </a>
+              <!--*/-->
+            </div>
+          </div>
+
+          <!--最新推荐-->
+          <div id="recommendDiv" class="ui segments m-margin-top-large recommendDiv animated fadeInRightBig">
+            <div class="ui secondary segment ">
+              <i class="bookmark icon"></i>最新推荐
+            </div>
+            <div class="ui segment" th:each="blog : ${recommendBlogs}">
+              <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" data-pjax class="m-black m-text-thin" th:text="${blog.title}">用户故事（User Story）</a>
+            </div>
+            <!--/*-->
+            <div class="ui segment" >
+              <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
+            </div>
+            <div class="ui segment">
+              <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
+            </div>
+            <div class="ui segment">
+              <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
+            </div>
+            <div class="ui segment">
+              <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
+            </div>
+            <div class="ui segment">
+              <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
+            </div>
+            <div class="ui segment">
+              <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
+            </div>
+            <div class="ui segment">
+              <a href="#" target="_blank" class="m-black m-text-thin">用户故事（User Story）</a>
+            </div>
+            <!--*/-->
+          </div>
+
+          <!--二维码-->
+          <h4 class="ui horizontal divider header m-margin-top-large">扫码加好友</h4>
+          <div class="ui centered card" style="width: 11em">
+            <img src="../static/images/wechat.jpg" th:src="@{/images/wechat.jpg}" alt="" class="ui rounded image" >
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <br>
+  <br>
+</div>
+<!--底部footer-->
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+  <div class="ui center aligned container">
+    <div class="ui inverted divided stackable grid">
+      <div class="three wide column">
+        <div class="ui inverted link list">
+          <div class="item">
+            <img src="../static/images/wechat.jpg" th:src="@{/images/wechat.jpg}"  class="ui rounded image" alt="" style="width: 110px">
+          </div>
+        </div>
+      </div>
+      <div class="three wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+        </div>
+      </div>
+      <div class="three wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item m-text-thin">Email：lc2333vlp@163.com</a>
+          <a href="#" class="item m-text-thin">QQ：1435564677</a>
+        </div>
+      </div>
+      <div class="seven wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
+        <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、记录学习进度和关于编程、写作、思考相关的任何内容...</p>
+      </div>
+    </div>
+    <div class="ui inverted section divider"></div>
+    <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2020 - 2020 LC Designed by LiuCan</p>
+  </div>
+
+</footer>
+<!--网易云插件-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<div class="aplayer" data-id="4963723052" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"  data-volume="0.6" ></div>
+<script src="http://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+<script src="http://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+<script src="../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
+<script src="../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
+<script src="../static/lib/qrcode/qrcode.min.js" th:src="@{/lib/qrcode/qrcode.min.js}"></script>
+<script src="../static/lib/waypoints/jquery.waypoints.min.js" th:src="@{/lib/waypoints/jquery.waypoints.min.js}"></script>
+<script src="../static/js/jquery.emoji.js" th:src="@{/js/jquery.emoji.js}"></script>
+<script src="../static/js/emoji.list.js" th:src="@{/js/emoji.list.js}"></script>
+<script src="../static/js/me.js" th:src="@{/js/me.js}"></script>
+<script src="https://cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
+<script src="http://connect.qq.com/widget/loader/loader.js" widget="shareqq" charset="utf-8"></script>
+<!--<script src="../static/js/APlayer.min.js" th:src="@{/js/APlayer.min.js}"></script>-->
+<!--  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.js"></script>
+  <script src="../static/js/Player.js" th:src="@{/js/Player.js}"></script>-->
+<script>
+  $('#newblog-container').load(/*[[@{/footer/newblog}]]*/"/footer/newblog");
+</script>
+<script>
+  $('.ui.dropdown').dropdown({
+    on: 'hover'
+  });
+  $('.ngvigation').transition('bounce');
+  $('.brand').transition('flash');
+
+</script>
+<!--适配移动端和电脑端-->
+<script type="text/javascript">
+  var browser = {
+    versions: function () {
+      var u = navigator.userAgent, app = navigator.appVersion;
+      return {     //移动终端浏览器版本信息
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或uc浏览器
+        iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
+        iPad: u.indexOf('iPad') > -1, //是否iPad
+        webApp: u.indexOf('Safari') == -1 //是否web应用程序，没有头部与底部
+      };
+    }(),
+    language: (navigator.browserLanguage || navigator.language).toLowerCase()
+  }
+  if (browser.versions.mobile) {
+
+    /*移动端移除animated特效*/
+    $('#typeDiv').removeClass('animated fadeInRightBig ');
+    $('#tagDiv').removeClass('animated fadeInRightBig');
+    $('#recommendDiv').removeClass('animated fadeInRightBig');
+    $('#middleValue').removeClass('animated fadeIn');
+    $('#blogDiv').removeClass('animated fadeInLeftBig');
+    //执行移动端的相关代码
+    //alert("移动端");
+    //设置移动端不显示网易云音乐插件
+    /*      onload = function () {
+              var MusicDivShow = document.getElementById('netEasy-music');//获取指定div中的元素
+              MusicDivShow.style.display = 'none';//控制层隐藏
+          };*/
+  }else if(!browser.versions.mobile){ //非移动端，动态加载js和div
+    //设置电脑端显示网易云音乐插件
+    onload = function () {
+      /*        ap.seek(localStorage.getItem("musicTime"));
+              ap.play();*/
+      /*var MusicDivShow = document.getElementById('netEasy-music');//获取指定div中的元素
+      MusicDivShow.style.display = 'block';//控制层显示*/
+    };
+    var script1 = document.createElement('script');
+    script1.type = 'text/javascript';
+    script1.src = '\\js\\snow.js';
+
+    <!-- 天气预报 -->
+    WIDGET = {FID: 'EtgqPWMbdv'}
+    var script4 = document.createElement('script');
+    script4.type = 'text/javascript';
+    script4.src = 'https://apip.weatherdt.com/float/static/js/r.js?v=1111';
+
+    var script2 = document.createElement('script');
+    script2.type = 'text/javascript';
+    script2.src = '\\js\\click_show_text.js';
+
+    var script3 = document.createElement('script');
+    script3.type = 'text/javascript';
+    script3.color = '220,220,220';
+    script3.opacity = '0.7';//透明度
+    script3.zIndex = '-2';
+    script3.count = '200';
+    script3.src = '//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js';
+
+    var script5 = document.createElement('script');
+    script5.type = 'text/javascript';
+    script5.src = '\\js\\autoload.js';
+
+    $('body').append(script5);
+    $('body').append(script1);
+    $('body').append(script4);
+    $('body').append(script2);
+    $('body').append(script3);
+  }
+</script>
+<!--博客美化效果-->
+<!--单击显示文字-->
+<!--  <script type="text/javascript" src="/js/click_show_text.js"></script>-->
+<!--动态线条背景-->
+<!--  <script type="text/javascript"
+          color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+  </script>-->
+<!-- 雪花特效 -->
+<!--<script type="text/javascript" src="\js\snow.js"></script>-->
+
+<script type="text/javascript">
+
+  /*    window.onbeforeunload=function(e){
+  /!*      var e = window.event||e;
+        e.returnValue=("确定离开当前页面吗？");*!/
+        let currentTime = ap.audio.currentTime;
+        localStorage.setItem("musicTime",currentTime);
+        ap.pause();
+      }*/
+
+  $(function() {
+    $(document).pjax(' a[data-pjax]', '#pjax-container',{fragment: '#pjax-container',timeout: 8000, type: 'GET'});
+
+    $(document).on('submit', 'form', function(event) {
+      //var container = $(this).closest('[pjax-container]');
+      $.pjax.submit(event, '#pjax-container', {
+        fragment:'#pjax-container', timeout:8000
+      });
+    });
+
+    $(document).on('pjax:send', function() {
+      $(".loading").css("display", "block");
+    });
+
+    $(document).on('pjax:complete', function() {
+      $(".loading").css("display", "none");
+    });
+  })
+</script>
+<script>
+  // 运行时间统计
+  function secondToDate(second) {
+    if (!second) {
+      return 0;
+    }
+    var time = new Array(0, 0, 0, 0, 0);
+    if (second >= 365 * 24 * 3600) {
+      time[0] = parseInt(second / (365 * 24 * 3600));
+      second %= 365 * 24 * 3600;
+    }
+    if (second >= 24 * 3600) {
+      time[1] = parseInt(second / (24 * 3600));
+      second %= 24 * 3600;
+    }
+    if (second >= 3600) {
+      time[2] = parseInt(second / 3600);
+      second %= 3600;
+    }
+    if (second >= 60) {
+      time[3] = parseInt(second / 60);
+      second %= 60;
+    }
+    if (second > 0) {
+      time[4] = second;
+    }
+    return time;
+  }
+
+  function setTime() {
+    /*此处为网站的创建时间*/
+    var create_time = Math.round(new Date(Date.UTC(2020, 23, 25, 15, 15, 15)).getTime() / 1000);
+    var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+    currentTime = secondToDate((timestamp - create_time));
+    currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
+            + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
+            + '秒';
+    document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+  }
+
+  setInterval(setTime, 1000);
+
+
+  $('.menu.toggle').click(function () {
+    $('.m-item').toggleClass('m-mobile-show');
+
+  });
+
+</script>
+<script src="/js/typing.js"></script>
+<script type="text/javascript">
+  $(function() {
+    $(document).pjax(' a[data-pjax]', '#pjax-container',{fragment: '#pjax-container',timeout: 8000, type: 'GET'});
+    $(document).on('pjax:send', function() {
+      $(".loading").css("display", "block");
+    });
+    $(document).on('pjax:complete', function() {
+      $(".loading").css("display", "none");
+    });
+  })
+  // 导航栏显示
+  var waypoint = new Waypoint({
+    element: document.getElementById('waypoint'),
+    handler: function(direction) {
+      if (direction == 'down') {
+        $('#nav').show(500);
+      } else {
+        $('#nav').hide(500);
+      }
+      console.log('Scrolled to waypoint!  ' + direction);
+    }
+  })
+  // 显示公众号
+  $('.tencent').popup({
+    popup: $('.tencent-qr'),
+    position: 'bottom center'
+  });
+
+  // 显示微信
+  $('.wechat').popup({
+    popup: $('.wechat-qr'),
+    position: 'bottom center'
+  });
+
+  // 显示QQ
+  $('.qq').popup({
+    popup: $('.qq-qr'),
+    position: 'bottom center'
+  });
+
+  // 显示邮箱
+  $('.email').popup();
+
+  // 显示CSDN
+  $('.csdn').popup();
+
+  // 显示github
+  $('.github').popup();
+
+  $('.ui.dropdown').dropdown({
+    on: 'hover'
+  });
+</script>
+</body>
+</html>
